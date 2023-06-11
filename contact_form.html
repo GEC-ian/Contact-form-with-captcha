@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+    <title>Contact Form with CAPTCHA</title>
+
+    <style>
+
+        .container {
+
+            max-width: 400px;
+
+            margin: 0 auto;
+
+            padding: 20px;
+
+        }
+
+        .form-group {
+
+            margin-bottom: 20px;
+
+        }
+
+        label {
+
+            display: block;
+
+            font-weight: bold;
+
+        }
+
+        input[type="text"],
+
+        textarea {
+
+            width: 100%;
+
+            padding: 10px;
+
+            border: 1px solid #ccc;
+
+            border-radius: 4px;
+
+        }
+
+        .captcha-container {
+
+            display: flex;
+
+            align-items: center;
+
+        }
+
+        .captcha-image {
+
+            margin-right: 10px;
+
+        }
+
+        .submit-btn {
+
+            background-color: #4CAF50;
+
+            color: white;
+
+            padding: 10px 20px;
+
+            border: none;
+
+            border-radius: 4px;
+
+            cursor: pointer;
+
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <div class="container">
+
+        <h2>Contact Form</h2>
+
+        <form id="contactForm" action="send_email.php" method="post">
+
+            <div class="form-group">
+
+                <label for="name">Name:</label>
+
+                <input type="text" id="name" name="name" required>
+
+            </div>
+
+            <div class="form-group">
+
+                <label for="email">Email:</label>
+
+                <input type="text" id="email" name="email" required>
+
+            </div>
+
+            <div class="form-group">
+
+                <label for="subject">Subject:</label>
+
+                <input type="text" id="subject" name="subject" required>
+
+            </div>
+
+            <div class="form-group">
+
+                <label for="message">Message:</label>
+
+                <textarea id="message" name="message" rows="5" required></textarea>
+
+            </div>
+
+            <div class="form-group">
+
+                <div class="captcha-container">
+
+                    <img class="captcha-image" id="captchaImage" src="#" alt="CAPTCHA Image">
+
+                    <button type="button" id="refreshCaptcha">Refresh CAPTCHA</button>
+
+                </div>
+
+                <label for="captcha">Enter the CAPTCHA code:</label>
+
+                <input type="text" id="captcha" name="captcha" required>
+
+            </div>
+
+            <button type="submit" class="submit-btn">Submit</button>
+
+        </form>
+
+    </div>
+
+    <script>
+
+        // Generate a random CAPTCHA code
+
+        function generateCaptcha() {
+
+            var captcha = Math.random().toString(36).substring(7);
+
+            var captchaImage = document.getElementById('captchaImage');
+
+            captchaImage.src = 'https://dummyimage.com/150x50/000/fff&text=' + captcha;
+
+        }
+
+        // Refresh the CAPTCHA image
+
+        document.getElementById('refreshCaptcha').addEventListener('click', function () {
+
+            generateCaptcha();
+
+        });
+
+        // Validate the CAPTCHA code on form submission
+
+        document.getElementById('contactForm').addEventListener('submit', function (event) {
+
+            var inputCaptcha = document.getElementById('captcha').value;
+
+            var captchaImageText = document.getElementById('captchaImage').src.split('=')[1];
+
+            if (inputCaptcha.toLowerCase() !== captchaImageText.toLowerCase()) {
+
+                event.preventDefault();
+
+                alert('Invalid CAPTCHA code! Please try again.');
+
+            }
+
+            else {
+
+                // Retrieve form field values
+
+                var name = document.getElementById('name').value;
+
+                var email = document.getElementById('email').value;
+
+                var subject = document.getElementById('subject').value;
+
+                var message = document.getElementById('message').value;
+
+                // Log form data in the console
+
+                console.log('Form Data:');
+
+                console.log('Name:', name);
+
+                console.log('Email:', email);
+
+                console.log('Subject:', subject);
+
+                console.log('Message:', message);
+
+                // Display success message
+
+                var successMessage = document.createElement('p');
+
+                successMessage.textContent = 'Message sent successfully!';
+
+                document.body.appendChild(successMessage);
+
+            }
+
+        });
+
+        // Generate the initial CAPTCHA on page load
+
+        generateCaptcha();
+
+    </script>
+
+</body>
+
+</html>
+
